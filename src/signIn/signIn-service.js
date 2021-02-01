@@ -1,6 +1,6 @@
 const SignInService = {
   getUserByEmail(knex,email){
-    return knex.select('password').where('email',email).first()
+    return knex.from('users').select('*').where('email',email).first()
   }
 }
 
