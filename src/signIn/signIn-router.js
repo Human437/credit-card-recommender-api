@@ -6,18 +6,23 @@ const path = require('path')
 const signInRouter = express.Router()
 const jsonParser = express.json()
 
-const serializeSignIn = signIn => ({
+const serializeUser = signIn => ({
+  id: signIn.id,
   email: signIn.email,
-  passwordHash: signIn.passwordHash
+  hashedPassword: signIn.hashedpassword,
+  userCards: signIn.usercards,
+  msg: signIn.msg
 })
 
 signInRouter
   .route('/')
-  .get((req,res,next) => {
+  .get(jsonParser,(req,res,next) => {
     const knexInstance = req.app.get('db')
     SignInService.getUserByEmail(knexInstance,req.body.email)
       .then(user =>{
-        res.json(user.map(serializeSignIn))
+        res.json(serializeUser(user))
       })
       .catch(error => next(error))
   })
+
+  module.exports = signInRouter
