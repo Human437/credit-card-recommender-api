@@ -53,6 +53,19 @@ describe('Credit Card Recommender Endpoints', () => {
         .expect(401, { error: 'Unauthorized request' })
     })
 
+    it('responds with 401 Unauthorized for GET /api/articles', () => {
+      return supertest(app)
+        .get('/api/articles')
+        .expect(401, { error: 'Unauthorized request' })
+    })
+
+    it('responds with 401 Unauthorized for GET /api/articles/:articleId', () => {
+      const secondArticle = testArticles[1]
+      return supertest(app)
+        .get(`/api/articles/${secondArticle.id}`)
+        .expect(401, { error: 'Unauthorized request' })
+    })
+
     it('responds with 401 Unauthorized for GET /api/users', () => {
       return supertest(app)
         .get('/api/users')
