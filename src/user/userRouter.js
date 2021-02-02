@@ -1,20 +1,20 @@
 const express = require('express')
 const xss = require('xss')
-const SignInService = require('./signIn-service')
+const UserService = require('./userService')
 const path = require('path')
 
-const signInRouter = express.Router()
+const userRouter = express.Router()
 const jsonParser = express.json()
 
-const serializeUser = signIn => ({
-  id: signIn.id,
-  email: xss(signIn.email),
-  hashedPassword: xss(signIn.hashedpassword),
-  userCards: signIn.usercards,
-  msg: signIn.msg
+const serializeUser = user => ({
+  id: user.id,
+  email: xss(user.email),
+  hashedPassword: xss(user.hashedpassword),
+  userCards: user.usercards,
+  msg: user.msg
 })
 
-signInRouter
+userRouter
   .route('/')
   .get(jsonParser,(req,res,next) => {
     const knexInstance = req.app.get('db')
@@ -42,4 +42,4 @@ signInRouter
       .catch(next)
   })
 
-  module.exports = signInRouter
+  module.exports = userRouter

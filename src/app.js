@@ -5,7 +5,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const validateBearerToken = require('./validate-bearer-token')
-const signInRouter = require('./signIn/signIn-router')
+const userRouter = require('./user/userRouter')
 
 const app = express()
 
@@ -18,7 +18,7 @@ app.use(helmet())
 app.use(cors())
 
 // app.use(validateBearerToken)
-app.use('/api/users',signInRouter)
+app.use('/api/users',userRouter)
 
 app.get('/',(req,res)=>{
   res.send('Hello, world!')

@@ -1,4 +1,4 @@
-const SignInService = {
+const UserService = {
   getUserByEmail(knex,email){
     return knex.from('users').select('*').where('email',email).first()
   },
@@ -13,4 +13,4 @@ const SignInService = {
   }
 }
 
-module.exports = SignInService
+module.exports = UserService
