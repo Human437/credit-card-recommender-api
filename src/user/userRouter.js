@@ -18,7 +18,7 @@ userRouter
   .route('/')
   .get(jsonParser,(req,res,next) => {
     const knexInstance = req.app.get('db')
-    SignInService.getUserByEmail(knexInstance,req.body.email)
+    UserService.getUserByEmail(knexInstance,req.body.email)
       .then(user =>{
         res.json(serializeUser(user))
       })
@@ -33,13 +33,34 @@ userRouter
     return res.status(400).json({
         error: { message: `Missing '${key}' in request body` }
     })
-    SignInService.insertUser(knexInstance,newUser)
+    UserService.insertUser(knexInstance,newUser)
       .then(user => {
         res
           .status(201)
           .json(serializeUser(user))
       })
       .catch(next)
+  })
+
+  .patch(jsonParser,(req,res,next) => {
+    const knexInstance = req.app.get('db')
+    const {id, userCards:usercards,msg} = req.body
+    const userInfoToUpdate = {usercards,msg}
+
+    const numberOfValues = Object.values(userInfoToUpdate).filter(Boolean).length
+    if (numberOfValues === 0) {
+      return res.status(400).json({
+        error: {
+          message: `Request body must contain either 'userCards' or 'msg'`
+        }
+      })
+    }
+
+    UserService.updateUser(knexInstance,id,userInfoToUpdate)
+    .then(numRowsAffected => {
+      res.status(204).end()
+    })
+    .catch(next)
   })
 
   module.exports = userRouter
