@@ -6,6 +6,7 @@ const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const validateBearerToken = require('./validate-bearer-token')
 const userRouter = require('./user/userRouter')
+const articleRouter = require('./articles/articles-router')
 
 const app = express()
 
@@ -19,6 +20,7 @@ app.use(cors())
 
 // app.use(validateBearerToken)
 app.use('/api/users',userRouter)
+app.use('/api/articles',articleRouter)
 
 app.get('/',(req,res)=>{
   res.send('Hello, world!')

@@ -22,3 +22,5 @@ articlesRouter
       })
       .catch(error => next(error))
   })
+
+module.exports = articlesRouter
