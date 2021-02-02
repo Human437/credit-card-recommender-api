@@ -16,8 +16,12 @@ describe('Credit Card Recommender Endpoints', () => {
   after('disconnect from db', () => db.destroy())
 
   before('cleanup', () => db('users').truncate())
+  before('cleanup', () => db('articles').truncate())
+  before('cleanup', () => db('available_cards').truncate())
 
   afterEach('cleanup', () => db('users').truncate())
+  afterEach('cleanup', () => db('articles').truncate())
+  afterEach('cleanup', () => db('available_cards').truncate())
 
   describe(`Unauthorized requests`, () => {
     const testUsers = fixtures.makeUsersArray()
@@ -28,6 +32,25 @@ describe('Credit Card Recommender Endpoints', () => {
       return db
         .into('users')
         .insert(testUsers)
+    })
+
+    it('responds with 401 Unauthorized for GET /', () => {
+      return supertest(app)
+        .get('/')
+        .expect(401, { error: 'Unauthorized request' })
+    })
+
+    it('responds with 401 Unauthorized for GET /api/cards', () => {
+      return supertest(app)
+        .get('/api/cards')
+        .expect(401, { error: 'Unauthorized request' })
+    })
+
+    it('responds with 401 Unauthorized for GET /api/cards/:cardId', () => {
+      const secondCard = testCards[1]
+      return supertest(app)
+        .get(`/api/cards/${secondCard.id}`)
+        .expect(401, { error: 'Unauthorized request' })
     })
 
     it('responds with 401 Unauthorized for GET /api/users', () => {
