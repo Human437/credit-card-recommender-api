@@ -2,6 +2,7 @@ const express = require('express')
 const xss = require('xss')
 const UserService = require('./userService')
 const path = require('path')
+const CardsService = require('../cards/cards-service')
 
 const userRouter = express.Router()
 const jsonParser = express.json()
@@ -61,6 +62,28 @@ userRouter
       res.status(204).end()
     })
     .catch(next)
+  })
+
+userRouter
+  .route('/:userId')
+  .all((req,res,next) => {
+    CardsService.getCardById(
+      req.app.get('db'),
+      req.params.cardId
+    )
+      .then(user => {
+        if(!user){
+          return res.status(404).json({
+            error: {message: `User doesn't exist`}
+          })
+        }
+        res.user = user
+        next()
+      })
+      .catch(next)
+  })
+  .get((req,res,next) => {
+    res.json(serializeUser(res.user))
   })
 
   module.exports = userRouter
