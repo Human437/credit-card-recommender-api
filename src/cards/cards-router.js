@@ -24,4 +24,24 @@ cardsRouter
       .catch(error => next(error))
   })
 
+cardsRouter
+  .route('/:cardId')
+  .all((req,res,next) => {
+    const knexInstance = req.app.get('db')
+    CardsService.getCardById(knexInstance,req.params.cardId)
+      .then(card => {
+        if(!card){
+          return res.status(404).json({
+            error: {message: `Card doesn't exist`}
+          })
+        }
+        res.card = card
+        next()
+      })
+      .catch(next)
+  })
+  .get((req,res,next) => {
+    res.json(serializeCards(res.card))
+  })
+
 module.exports = cardsRouter
