@@ -8,8 +8,8 @@ const jsonParser = express.json()
 
 const serializeUser = signIn => ({
   id: signIn.id,
-  email: signIn.email,
-  hashedPassword: signIn.hashedpassword,
+  email: xss(signIn.email),
+  hashedPassword: xss(signIn.hashedpassword),
   userCards: signIn.usercards,
   msg: signIn.msg
 })
