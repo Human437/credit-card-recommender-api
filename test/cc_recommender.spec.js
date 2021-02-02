@@ -1,6 +1,7 @@
 const app = require('../src/app')
 const knex = require('knex')
 const fixtures = require('./cc_recommender-fixtures')
+const supertest = require('supertest')
 
 describe('Credit Card Recommender Endpoints', () => {
   let db
@@ -100,6 +101,34 @@ describe('Credit Card Recommender Endpoints', () => {
           msg: 'Test msg'
         })
         .expect(401, { error: 'Unauthorized request' })
+    })
+  })
+  
+  describe('GET /api/articles', () => {
+    context(`Given no articles`,() => {
+      it(`responds with 200 and an empty list`, () => {
+        return supertest(app)
+          .get('/api/articles')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(200,[])
+      })
+    })
+
+    context('Given there are articles in the database', () => {
+      const testArticles = fixtures.makeArticlesArray()
+
+      beforeEach('insert articles', () => {
+        return db
+          .into('articles')
+          .insert(testArticles)
+      })
+
+      it('gets the articles from the store', () => {
+        return supertest(app)
+          .get('/api/articles')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(200,testArticles)
+      })
     })
   })
 })
