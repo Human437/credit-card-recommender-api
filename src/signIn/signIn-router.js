@@ -24,5 +24,22 @@ signInRouter
       })
       .catch(error => next(error))
   })
+  .post(jsonParser,(req,res,next) => {
+    const knexInstance = req.app.get('db')
+    const {email, hashedPassword:hashedpassword, userCards:usercards,msg} = req.body
+    const newUser = {email, hashedpassword,usercards,msg}
+    for (const [key, value] of Object.entries(newUser))
+    if (value == null)
+    return res.status(400).json({
+        error: { message: `Missing '${key}' in request body` }
+    })
+    SignInService.insertUser(knexInstance,newUser)
+      .then(user => {
+        res
+          .status(201)
+          .json(serializeUser(user))
+      })
+      .catch(next)
+  })
 
   module.exports = signInRouter
