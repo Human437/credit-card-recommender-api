@@ -192,5 +192,37 @@ describe('Credit Card Recommender Endpoints', () => {
       })
     })
   })
+
+  describe('GET /api/cards/:cardId', () => {
+    context('Given no card', () => {
+      it(`responds 404 when card doesn't exist`, () => {
+        return supertest(app)
+          .get(`/api/cards/123`)
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(404, {
+            error: { message: `Card doesn't exist` }
+          })
+      })
+    })
   
+    context('Given there are cards in the database', () => {
+      const testCards = fixtures.makeAvailableCardsArray()
+  
+      beforeEach('insert cards', () => {
+        return db
+          .into('available_cards')
+          .insert(testCards)
+      })
+  
+      it('responds with 200 and the specified card', () => {
+        const cardId = 2
+        const expectedCard = testCards[cardId - 1]
+        return supertest(app)
+          .get(`/api/cards/${cardId}`)
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(200, expectedCard)
+      })
+    })
+  
+  })
 })
