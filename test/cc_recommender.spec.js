@@ -223,6 +223,36 @@ describe('Credit Card Recommender Endpoints', () => {
           .expect(200, expectedCard)
       })
     })
+  })
+
+  describe('GET /api/users', () => {
+    context(`Given no users`,() => {
+      it(`responds with 400 when email is not provided`, () => {
+        return supertest(app)
+          .get('/api/users')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(400,{error: { message: `Missing email in request body` }})
+      })
+    })
   
+    context('Given there are users in the database', () => {
+      const testUsers = fixtures.makeUsersArray()
+  
+      beforeEach('insert users', () => {
+        return db
+          .into('users')
+          .insert(testUsers)
+      })
+  
+      it('gets the specified user by email from the store', () => {
+        return supertest(app)
+          .get('/api/users')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .send({
+            email:testUsers[0].email
+          })
+          .expect(200,testUsers[0])
+      })
+    })
   })
 })
