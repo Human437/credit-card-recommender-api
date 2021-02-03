@@ -164,4 +164,33 @@ describe('Credit Card Recommender Endpoints', () => {
     })
 
   })
+
+  describe('GET /api/cards', () => {
+    context(`Given no cards`,() => {
+      it(`responds with 200 and an empty list`, () => {
+        return supertest(app)
+          .get('/api/cards')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(200,[])
+      })
+    })
+  
+    context('Given there are cards in the database', () => {
+      const testCards = fixtures.makeAvailableCardsArray()
+  
+      beforeEach('insert cards', () => {
+        return db
+          .into('available_cards')
+          .insert(testCards)
+      })
+  
+      it('gets the cards from the store', () => {
+        return supertest(app)
+          .get('/api/cards')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(200,testCards)
+      })
+    })
+  })
+  
 })
