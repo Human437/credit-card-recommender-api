@@ -73,9 +73,9 @@ userRouter
 userRouter
   .route('/:userId')
   .all((req,res,next) => {
-    CardsService.getCardById(
+    UserService.getUserById(
       req.app.get('db'),
-      req.params.cardId
+      req.params.userId
     )
       .then(user => {
         if(!user){
