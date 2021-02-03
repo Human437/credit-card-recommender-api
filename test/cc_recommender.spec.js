@@ -103,7 +103,7 @@ describe('Credit Card Recommender Endpoints', () => {
         .expect(401, { error: 'Unauthorized request' })
     })
   })
-  
+
   describe('GET /api/articles', () => {
     context(`Given no articles`,() => {
       it(`responds with 200 and an empty list`, () => {
@@ -130,5 +130,38 @@ describe('Credit Card Recommender Endpoints', () => {
           .expect(200,testArticles)
       })
     })
+  })
+
+  describe('GET /api/articles/:articleId', () => {
+    context('Given no article', () => {
+      it(`responds 404 when article doesn't exist`, () => {
+        return supertest(app)
+          .get(`/api/articles/123`)
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(404, {
+            error: { message: `Article doesn't exist` }
+          })
+      })
+    })
+
+    context('Given there are articles in the database', () => {
+      const testArticles = fixtures.makeArticlesArray()
+
+      beforeEach('insert articles', () => {
+        return db
+          .into('articles')
+          .insert(testArticles)
+      })
+
+      it('responds with 200 and the specified article', () => {
+        const articleId = 2
+        const expectedArticle = testArticles[articleId - 1]
+        return supertest(app)
+          .get(`/api/articles/${articleId}`)
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(200, expectedArticle)
+      })
+    })
+
   })
 })
