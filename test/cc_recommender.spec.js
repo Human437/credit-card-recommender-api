@@ -388,7 +388,7 @@ describe('Credit Card Recommender Endpoints', () => {
 
   describe(`PATCH /api/users`, () => {
     context(`Given no user`, () => {
-      it(`responds with 404`, () => {
+      it(`responds with 404 when a specified user doesn't exist`, () => {
         const updatedUser = {
           id: 12345,
           userCards: `[1,2]`,
@@ -399,6 +399,37 @@ describe('Credit Card Recommender Endpoints', () => {
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
           .send(updatedUser)
           .expect(404,{error: {message: `User doesn't exist`}})
+      })
+    })
+    context(`Given there are users in the db`, () => {
+      const testUsers = fixtures.makeUsersArray()
+      beforeEach('insert users', () => {
+        return db
+          .into('users')
+          .insert(testUsers)
+      })
+
+      it(`responds with 204 and updates the db`, () => {
+        const updatedUser = {
+          id: 1,
+          usercards: `[1,2]`,
+          msg:`updated msg`
+        }
+        const expectedUser = {
+          ...testUsers[updatedUser.id-1],
+          ...updatedUser
+        }
+        return supertest(app)
+          .patch(`/api/users`)
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .send(updatedUser)
+          .expect(204)
+          .then(res => 
+            supertest(app)
+              .get(`/api/users/${updatedUser.id}`)
+              .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+              .expect(expectedUser)
+          )
       })
     })
   })
