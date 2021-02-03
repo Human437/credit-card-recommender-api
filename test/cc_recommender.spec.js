@@ -409,7 +409,7 @@ describe('Credit Card Recommender Endpoints', () => {
           .insert(testUsers)
       })
 
-      it(`responds with 204 and updates the db`, () => {
+      it(`responds with 204 and updates the db when all fields are provided`, () => {
         const updatedUser = {
           id: 1,
           usercards: `[1,2]`,
@@ -423,6 +423,30 @@ describe('Credit Card Recommender Endpoints', () => {
           .patch(`/api/users`)
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
           .send(updatedUser)
+          .expect(204)
+          .then(res => 
+            supertest(app)
+              .get(`/api/users/${updatedUser.id}`)
+              .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+              .expect(expectedUser)
+          )
+      })
+
+      it(`responds with 204 and updates the db when only some fields are provided`, () => {
+        const updatedUser = {
+          id: 1,
+          msg:`test msg`
+        }
+        const expectedUser = {
+          ...testUsers[updatedUser.id-1],
+          ...updatedUser
+        }
+        return supertest(app)
+          .patch(`/api/users`)
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .send({
+            ...updatedUser,
+          fieldToIgnore: 'should not be in the GET response'})
           .expect(204)
           .then(res => 
             supertest(app)
