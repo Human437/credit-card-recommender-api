@@ -10,7 +10,7 @@ const serializeCards = card => ({
   id: card.id,
   title: xss(card.title),
   content: xss(card.content),
-  imgLink: xss(card.imglink)
+  imglink: xss(card.imglink)
 })
 
 cardsRouter
