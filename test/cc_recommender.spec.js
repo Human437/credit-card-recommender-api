@@ -455,6 +455,19 @@ describe('Credit Card Recommender Endpoints', () => {
               .expect(expectedUser)
           )
       })
+
+      it(`responds with 400 when no required fields are supplied`, () => {
+        const updateUser = {
+          id: 1,
+        }
+        return supertest(app)
+          .patch(`/api/users`)
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .send(updateUser)
+          .expect(400, {error: {
+            message: `Request body must contain either 'usercards' or 'msg'`
+          }})
+      })
     })
   })
 })
