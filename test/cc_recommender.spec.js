@@ -385,4 +385,21 @@ describe('Credit Card Recommender Endpoints', () => {
         )
     })
   })
+
+  describe(`PATCH /api/users`, () => {
+    context(`Given no user`, () => {
+      it(`responds with 404`, () => {
+        const updatedUser = {
+          id: 12345,
+          userCards: `[1,2]`,
+          msg:`updated msg`
+        }
+        return supertest(app)
+          .patch(`/api/users`)
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .send(updatedUser)
+          .expect(404,{error: {message: `User doesn't exist`}})
+      })
+    })
+  })
 })
