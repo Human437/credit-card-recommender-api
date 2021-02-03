@@ -255,4 +255,37 @@ describe('Credit Card Recommender Endpoints', () => {
       })
     })
   })
+
+  describe('GET /api/users/:userId', () => {
+    context('Given no user', () => {
+      it(`responds 404 when user doesn't exist`, () => {
+        return supertest(app)
+          .get(`/api/users/123`)
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(404, {
+            error: { message: `User doesn't exist` }
+          })
+      })
+    })
+  
+    context('Given there are users in the database', () => {
+      const testUsers = fixtures.makeUsersArray()
+  
+      beforeEach('insert users', () => {
+        return db
+          .into('users')
+          .insert(testUsers)
+      })
+  
+      it('responds with 200 and the specified user', () => {
+        const userId = 2
+        const expectedUser = testUsers[userId - 1]
+        return supertest(app)
+          .get(`/api/users/${userId}`)
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(200, expectedUser)
+      })
+    })
+  
+  })
 })
