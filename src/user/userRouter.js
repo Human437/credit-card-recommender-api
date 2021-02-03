@@ -10,8 +10,8 @@ const jsonParser = express.json()
 const serializeUser = user => ({
   id: user.id,
   email: xss(user.email),
-  hashedPassword: xss(user.hashedpassword),
-  userCards: user.usercards,
+  hashedpassword: xss(user.hashedpassword),
+  usercards: user.usercards,
   msg: user.msg
 })
 
@@ -19,7 +19,13 @@ userRouter
   .route('/')
   .get(jsonParser,(req,res,next) => {
     const knexInstance = req.app.get('db')
-    UserService.getUserByEmail(knexInstance,req.body.email)
+    const email = req.body.email
+    if (typeof email === 'undefined'){
+      return res.status(400).json({
+        error: { message: `Missing email in request body` }
+      })
+    }
+    UserService.getUserByEmail(knexInstance,email)
       .then(user =>{
         res.json(serializeUser(user))
       })
