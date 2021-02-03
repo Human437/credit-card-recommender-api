@@ -293,8 +293,8 @@ describe('Credit Card Recommender Endpoints', () => {
     it(`responds with 400 missing 'email' if not supplied`, () => {
       const newUser ={
         // email:"5hwpyxoutfugfqbusvz@twzhhq.com",
-        hashedpassword:"$2a$10$52IFOba30w8yQUEF3wfqPOy3hq31ujasIr0cQu6RFcD0GURuZE4wi",
-        usercards:"[5,6]",
+        hashedPassword:"$2a$10$52IFOba30w8yQUEF3wfqPOy3hq31ujasIr0cQu6RFcD0GURuZE4wi",
+        userCards:"[5,6]",
         // Only use unhashedPassword for testing purposes
         // unhashedPassword: aB3!bnmv
         msg:""
@@ -304,6 +304,54 @@ describe('Credit Card Recommender Endpoints', () => {
         .send(newUser)
         .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
         .expect(400, {error: { message: `Missing 'email' in request body` }})
+    })
+
+    it(`responds with 400 missing 'hashedpassword' if not supplied`, () => {
+      const newUser ={
+        email:"5hwpyxoutfugfqbusvz@twzhhq.com",
+        // hashedPassword:"$2a$10$52IFOba30w8yQUEF3wfqPOy3hq31ujasIr0cQu6RFcD0GURuZE4wi",
+        userCards:"[5,6]",
+        // Only use unhashedPassword for testing purposes
+        // unhashedPassword: aB3!bnmv
+        msg:""
+      }
+      return supertest(app)
+        .post(`/api/users`)
+        .send(newUser)
+        .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+        .expect(400, {error: { message: `Missing 'hashedpassword' in request body` }})
+    })
+
+    it(`responds with 400 missing 'usercards' if not supplied`, () => {
+      const newUser ={
+        email:"5hwpyxoutfugfqbusvz@twzhhq.com",
+        hashedPassword:"$2a$10$52IFOba30w8yQUEF3wfqPOy3hq31ujasIr0cQu6RFcD0GURuZE4wi",
+        // userCards:"[5,6]",
+        // Only use unhashedPassword for testing purposes
+        // unhashedPassword: aB3!bnmv
+        msg:""
+      }
+      return supertest(app)
+        .post(`/api/users`)
+        .send(newUser)
+        .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+        .expect(400, {error: { message: `Missing 'usercards' in request body` }})
+    })
+
+    it(`responds with 400 missing 'msg' if not supplied`, () => {
+      const newUser ={
+        email:"5hwpyxoutfugfqbusvz@twzhhq.com",
+        hashedPassword:"$2a$10$52IFOba30w8yQUEF3wfqPOy3hq31ujasIr0cQu6RFcD0GURuZE4wi",
+        userCards:"[5,6]",
+        // Only use unhashedPassword for testing purposes
+        // unhashedPassword: aB3!bnmv
+        // msg:""
+      }
+      return supertest(app)
+        .post(`/api/users`)
+        .send(newUser)
+        .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+        .expect(400, {error: { message: `Missing 'msg' in request body` }})
     })
   })
 })
