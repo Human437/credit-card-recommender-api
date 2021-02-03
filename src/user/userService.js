@@ -15,6 +15,9 @@ const UserService = {
     return knex('users')
       .where({id})
       .update(newUserFields)
+  },
+  getUserById(knex,id){
+    return knex.from('users').select('*').where('id',id).first()
   }
 }
 
