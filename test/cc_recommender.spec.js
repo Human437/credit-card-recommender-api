@@ -2,6 +2,7 @@ const app = require('../src/app')
 const knex = require('knex')
 const fixtures = require('./cc_recommender-fixtures')
 const supertest = require('supertest')
+const { expect } = require('chai')
 
 describe('Credit Card Recommender Endpoints', () => {
   let db
@@ -352,6 +353,36 @@ describe('Credit Card Recommender Endpoints', () => {
         .send(newUser)
         .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
         .expect(400, {error: { message: `Missing 'msg' in request body` }})
+    })
+
+    it(`adds a new user to the db`, () => {
+      const newUser ={
+        email:"5hwpyxoutfugfqbusvz@twzhhq.com",
+        hashedPassword:"$2a$10$52IFOba30w8yQUEF3wfqPOy3hq31ujasIr0cQu6RFcD0GURuZE4wi",
+        userCards:"[5,6]",
+        // Only use unhashedPassword for testing purposes
+        // unhashedPassword: aB3!bnmv
+        msg:"Test msg"
+      }
+      return supertest(app)
+        .post(`/api/users`)
+        .send(newUser)
+        .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+        .expect(201)
+        .expect(res => {
+          expect(res.body.email).to.eql(newUser.email)
+          expect(res.body.hashedpassowrd).to.eql(newUser.hashedPassowrd)
+          expect(res.body.usercards).to.eql(newUser.userCards)
+          expect(res.body.msg).to.eql(newUser.msg)
+        })
+        .then(res => 
+          //Using get user by id end point to check that an id is successfully made
+          //It is known that the get user by id endpoint already works due to previous tests
+          supertest(app)
+            .get(`/api/users/${res.body.id}`)  
+            .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+            .expect(res.body)
+        )
     })
   })
 })
