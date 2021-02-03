@@ -57,7 +57,7 @@ userRouter
     if (typeof usercards === 'undefined' && typeof msg === 'undefined') {
       return res.status(400).json({
         error: {
-          message: `Request body must contain either 'userCards' or 'msg'`
+          message: `Request body must contain either 'usercards' or 'msg'`
         }
       })
     }
