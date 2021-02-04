@@ -295,7 +295,7 @@ describe('Credit Card Recommender Endpoints', () => {
       const newUser ={
         // email:"5hwpyxoutfugfqbusvz@twzhhq.com",
         hashedPassword:"$2a$10$52IFOba30w8yQUEF3wfqPOy3hq31ujasIr0cQu6RFcD0GURuZE4wi",
-        userCards:"[5,6]",
+        userCards:[5,6],
         // Only use unhashedPassword for testing purposes
         // unhashedPassword: aB3!bnmv
         msg:""
@@ -311,7 +311,7 @@ describe('Credit Card Recommender Endpoints', () => {
       const newUser ={
         email:"5hwpyxoutfugfqbusvz@twzhhq.com",
         // hashedPassword:"$2a$10$52IFOba30w8yQUEF3wfqPOy3hq31ujasIr0cQu6RFcD0GURuZE4wi",
-        userCards:"[5,6]",
+        userCards:[5,6],
         // Only use unhashedPassword for testing purposes
         // unhashedPassword: aB3!bnmv
         msg:""
@@ -343,7 +343,7 @@ describe('Credit Card Recommender Endpoints', () => {
       const newUser ={
         email:"5hwpyxoutfugfqbusvz@twzhhq.com",
         hashedPassword:"$2a$10$52IFOba30w8yQUEF3wfqPOy3hq31ujasIr0cQu6RFcD0GURuZE4wi",
-        userCards:"[5,6]",
+        userCards:[5,6],
         // Only use unhashedPassword for testing purposes
         // unhashedPassword: aB3!bnmv
         // msg:""
@@ -359,7 +359,7 @@ describe('Credit Card Recommender Endpoints', () => {
       const newUser ={
         email:"5hwpyxoutfugfqbusvz@twzhhq.com",
         hashedPassword:"$2a$10$52IFOba30w8yQUEF3wfqPOy3hq31ujasIr0cQu6RFcD0GURuZE4wi",
-        userCards:"[5,6]",
+        userCards:[5,6],
         // Only use unhashedPassword for testing purposes
         // unhashedPassword: aB3!bnmv
         msg:"Test msg"
@@ -391,7 +391,7 @@ describe('Credit Card Recommender Endpoints', () => {
       it(`responds with 404 when a specified user doesn't exist`, () => {
         const updatedUser = {
           id: 12345,
-          userCards: `[1,2]`,
+          userCards: [1,2],
           msg:`updated msg`
         }
         return supertest(app)
@@ -412,7 +412,7 @@ describe('Credit Card Recommender Endpoints', () => {
       it(`responds with 204 and updates the db when all fields are provided`, () => {
         const updatedUser = {
           id: 1,
-          usercards: `[1,2]`,
+          usercards: [1,2],
           msg:`updated msg`
         }
         const expectedUser = {
