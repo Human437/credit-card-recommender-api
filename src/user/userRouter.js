@@ -27,6 +27,11 @@ userRouter
     }
     UserService.getUserByEmail(knexInstance,email)
       .then(user =>{
+        if(typeof user === 'undefined'){
+          return res.status(404).json({
+            error: { message: `The email provided is not associated with any account` }
+          })
+        }
         res.json(serializeUser(user))
       })
       .catch(error => next(error))
