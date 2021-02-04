@@ -3,6 +3,7 @@ const knex = require('knex')
 const fixtures = require('./cc_recommender-fixtures')
 const supertest = require('supertest')
 const { expect } = require('chai')
+const { getMaxListeners } = require('../src/app')
 
 describe('Credit Card Recommender Endpoints', () => {
   let db
@@ -253,6 +254,16 @@ describe('Credit Card Recommender Endpoints', () => {
             email:testUsers[0].email
           })
           .expect(200,testUsers[0])
+      })
+
+      it('responds with 404 when email provided is not associated with a user', () => {
+        return supertest(app)
+          .get('/api/users')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .send({
+            email:'emailNotInDB@gmail.com'
+          })
+          .expect(404,{error: { message: `The email provided is not associated with any account` }})
       })
     })
   })
