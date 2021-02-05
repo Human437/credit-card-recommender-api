@@ -1,8 +1,6 @@
 const express = require('express')
 const xss = require('xss')
 const UserService = require('./userService')
-const path = require('path')
-const CardsService = require('../cards/cards-service')
 
 const userRouter = express.Router()
 const jsonParser = express.json()
@@ -19,10 +17,10 @@ userRouter
   .route('/')
   .get(jsonParser,(req,res,next) => {
     const knexInstance = req.app.get('db')
-    const email = req.body.email
+    const email = req.query.email
     if (typeof email === 'undefined'){
       return res.status(400).json({
-        error: { message: `Missing email in request body` }
+        error: { message: `Missing email in request query` }
       })
     }
     UserService.getUserByEmail(knexInstance,email)
@@ -54,40 +52,41 @@ userRouter
       .catch(next)
   })
 
-  .patch(jsonParser,(req,res,next) => {
-    const knexInstance = req.app.get('db')
-    const {id, usercards:usercards,msg} = req.body
-    const userInfoToUpdate = {usercards,msg}
+  // .patch(jsonParser,(req,res,next) => {
+  //   const knexInstance = req.app.get('db')
+  //   const {id, usercards:usercards,msg} = req.body
+  //   const userInfoToUpdate = {usercards,msg}
+  //   console.log(req.body)
 
-    if (typeof usercards === 'undefined' && typeof msg === 'undefined') {
-      return res.status(400).json({
-        error: {
-          message: `Request body must contain either 'usercards' or 'msg'`
-        }
-      })
-    }
-    if (typeof id === 'undefined'){
-      return res.status(400).json({
-        error: {
-          message: 'Request body must contain id'
-        }
-      })
-    }
-    UserService.getUserById(knexInstance,id)
-      .then(user => {
-        if(!user){
-          return res.status(404).json({
-            error: {message: `User doesn't exist`}
-          })
-        }
-        return UserService.updateUser(knexInstance,id,userInfoToUpdate)
-          .then(numRowsAffected => {
-            res.status(204).end()
-          })
-          .catch(next)
-      })
-      .catch(next)
-  })
+  //   if (typeof usercards === 'undefined' && typeof msg === 'undefined') {
+  //     return res.status(400).json({
+  //       error: {
+  //         message: `Request body must contain either 'usercards' or 'msg'`
+  //       }
+  //     })
+  //   }
+  //   if (typeof id === 'undefined'){
+  //     return res.status(400).json({
+  //       error: {
+  //         message: 'Request body must contain id'
+  //       }
+  //     })
+  //   }
+  //   UserService.getUserById(knexInstance,id)
+  //     .then(user => {
+  //       if(!user){
+  //         return res.status(404).json({
+  //           error: {message: `User doesn't exist`}
+  //         })
+  //       }
+  //       return UserService.updateUser(knexInstance,id,userInfoToUpdate)
+  //         .then(numRowsAffected => {
+  //           res.status(204).end()
+  //         })
+  //         .catch(next)
+  //     })
+  //     .catch(next)
+  // })
 
 userRouter
   .route('/:userId')
@@ -109,6 +108,27 @@ userRouter
   })
   .get((req,res,next) => {
     res.json(serializeUser(res.user))
+  })
+  .patch(jsonParser,(req,res,next) => {
+    const knexInstance = req.app.get('db')
+    const {usercards:usercards,msg} = req.body
+    const userInfoToUpdate = {usercards,msg}
+    const id = req.params.userId
+    console.log(req.body)
+
+    if (typeof usercards === 'undefined' && typeof msg === 'undefined') {
+      return res.status(400).json({
+        error: {
+          message: `Request body must contain either 'usercards' or 'msg'`
+        }
+      })
+    }
+    UserService.updateUser(knexInstance,id,userInfoToUpdate)
+      .then(numRowsAffected => {
+        console.log('success')
+        res.status(204).end()
+      })
+      .catch(next)
   })
 
   module.exports = userRouter
