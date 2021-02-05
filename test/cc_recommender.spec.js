@@ -233,7 +233,7 @@ describe('Credit Card Recommender Endpoints', () => {
         return supertest(app)
           .get('/api/users')
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-          .expect(400,{error: { message: `Missing email in request body` }})
+          .expect(400,{error: { message: `Missing email in request query` }})
       })
     })
   
@@ -248,21 +248,15 @@ describe('Credit Card Recommender Endpoints', () => {
   
       it('gets the specified user by email from the store', () => {
         return supertest(app)
-          .get('/api/users')
+          .get(`/api/users?email=${testUsers[0].email}`)
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-          .send({
-            email:testUsers[0].email
-          })
           .expect(200,testUsers[0])
       })
 
       it('responds with 404 when email provided is not associated with a user', () => {
         return supertest(app)
-          .get('/api/users')
+          .get('/api/users?email=emailNotInDB@gmail.com')
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-          .send({
-            email:'emailNotInDB@gmail.com'
-          })
           .expect(404,{error: { message: `The email provided is not associated with any account` }})
       })
     })
@@ -401,12 +395,11 @@ describe('Credit Card Recommender Endpoints', () => {
     context(`Given no user`, () => {
       it(`responds with 404 when a specified user doesn't exist`, () => {
         const updatedUser = {
-          id: 12345,
           userCards: [1,2],
           msg:`updated msg`
         }
         return supertest(app)
-          .patch(`/api/users`)
+          .patch(`/api/users/12345`)
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
           .send(updatedUser)
           .expect(404,{error: {message: `User doesn't exist`}})
@@ -414,6 +407,7 @@ describe('Credit Card Recommender Endpoints', () => {
     })
     context(`Given there are users in the db`, () => {
       const testUsers = fixtures.makeUsersArray()
+      const userId = 1
       beforeEach('insert users', () => {
         return db
           .into('users')
@@ -422,22 +416,21 @@ describe('Credit Card Recommender Endpoints', () => {
 
       it(`responds with 204 and updates the db when all fields are provided`, () => {
         const updatedUser = {
-          id: 1,
           usercards: [1,2],
           msg:`updated msg`
         }
         const expectedUser = {
-          ...testUsers[updatedUser.id-1],
+          ...testUsers[userId-1],
           ...updatedUser
         }
         return supertest(app)
-          .patch(`/api/users`)
+          .patch(`/api/users/${userId}`)
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
           .send(updatedUser)
           .expect(204)
           .then(res => 
             supertest(app)
-              .get(`/api/users/${updatedUser.id}`)
+              .get(`/api/users/${userId}`)
               .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
               .expect(expectedUser)
           )
@@ -445,15 +438,14 @@ describe('Credit Card Recommender Endpoints', () => {
 
       it(`responds with 204 and updates the db when only some fields are provided`, () => {
         const updatedUser = {
-          id: 1,
           msg:`test msg`
         }
         const expectedUser = {
-          ...testUsers[updatedUser.id-1],
+          ...testUsers[userId-1],
           ...updatedUser
         }
         return supertest(app)
-          .patch(`/api/users`)
+          .patch(`/api/users/${userId}`)
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
           .send({
             ...updatedUser,
@@ -461,18 +453,16 @@ describe('Credit Card Recommender Endpoints', () => {
           .expect(204)
           .then(res => 
             supertest(app)
-              .get(`/api/users/${updatedUser.id}`)
+              .get(`/api/users/${userId}`)
               .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
               .expect(expectedUser)
           )
       })
 
       it(`responds with 400 when no required fields are supplied`, () => {
-        const updateUser = {
-          id: 1,
-        }
+        const updateUser = {}
         return supertest(app)
-          .patch(`/api/users`)
+          .patch(`/api/users/${userId}`)
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
           .send(updateUser)
           .expect(400, {error: {
