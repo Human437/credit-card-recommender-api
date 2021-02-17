@@ -1,26 +1,27 @@
-# Express Boilerplate!
+# Credit Card Recommender API
 
-This is a boilerplate project used for starting new projects!
+ Too often people grow up not knowing much about credit cards or in a household where credit cards are demonized, while in reality they are pretty useful tools to get cash back and travel opportunities if used correctly. This app was created with the intention of helping those who are new to credit cards make an educated choice with regards to the user's first 5 credit cards. You will input your information to get a credit card recommendation based on your credit score, the number of cards you currently have, annual income, student status, and last hard inquiry.
 
-## Set up
+This is the back-end of the app. You can check out the repo for the client [here](https://github.com/Human437/credit-card-recommender) or you can view it live [here](credit-card-recommender.vercel.app).
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+#### Dummy Account Info
+- Email: john-doe@dummy-account.com
+- Password: aB3!bnmv
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+### New User Demo
+![](./gifsForReadMe/newUser.gif)
 
-## Scripts
+### Returning User Demo
+![](./gifsForReadMe/returningUser.gif)
 
-Start the application `npm start`
+### Technology Used
+- Node.js
+- Express
+- Supertest
+- Mocha and Chai
+- PostgresSQL
+- Knex.js
+- Heroku
 
-Start nodemon for the application `npm run dev`
-
-Run the tests `npm test`
-
-## Deploying
-
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's main branch.
+### Front-end
+This API should be used in conjunction with the client made for this project which can be found [here](https://github.com/Human437/credit-card-recommender).
