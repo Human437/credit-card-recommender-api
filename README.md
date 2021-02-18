@@ -25,3 +25,70 @@ This is the back-end of the app. You can check out the repo for the client [here
 
 ### Front-end
 This API should be used in conjunction with the client made for this project which can be found [here](https://github.com/Human437/credit-card-recommender).
+
+### Endpoints
+
+The API is RESTful and all requests must be made with a authorization token. You can set your own authorization token in your own `.env` file. Follow the format for the `.env` file below.
+````
+API_TOKEN=INSERT-YOUR-TOKEN-HERE
+DATABASE_URL=INSERT-YOUR-DATABASE-URL-HERE
+TEST_DATABASE_URL=INSERT-YOUR-TEST-DATABASE-URL-HERE
+````
+
+#### Articles
+- ##### Get all articles
+  ````
+  GET https://frozen-inlet-63495.herokuapp.com/api/articles
+  ````
+  Example request:
+  ````
+  fetch('https://frozen-inlet-63495.herokuapp.com/api/articles', {
+      method: 'get',
+      headers: new Headers({
+        'Authorization': `Bearer d6e2e7eb-ee9c-4f48-bf2a-4e491111cdc0`
+      })
+    })
+    .then(response => response.json())
+  ````
+  Example response:
+  ````
+  [
+    {
+        "id": 1,
+        "title": "Choosing Your First Credit Card",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vel dui mattis, bibendum dui aliquet, lobortis ante. Cras vestibulum, quam ac tincidunt dapibus, sapien mauris hendrerit mauris, ut scelerisque nisl magna sed ipsum. Sed molestie tortor vitae dignissim volutpat. In tincidunt leo imperdiet elit pulvinar, in rhoncus nulla pretium. Duis id malesuada risus. Phasellus libero nunc, feugiat at pharetra sit amet, vulputate ut justo."
+    },
+    {
+        "id": 2,
+        "title": "Understanding Your Fico Score",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vel dui mattis, bibendum dui aliquet, lobortis ante. Cras vestibulum, quam ac tincidunt dapibus, sapien mauris hendrerit mauris, ut scelerisque nisl magna sed ipsum. Sed molestie tortor vitae dignissim volutpat. In tincidunt leo imperdiet elit pulvinar, in rhoncus nulla pretium. Duis id malesuada risus. Phasellus libero nunc, feugiat at pharetra sit amet, vulputate ut justo."
+    },
+    {
+        "id": 3,
+        "title": "Cashback vs Points",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vel dui mattis, bibendum dui aliquet, lobortis ante. Cras vestibulum, quam ac tincidunt dapibus, sapien mauris hendrerit mauris, ut scelerisque nisl magna sed ipsum. Sed molestie tortor vitae dignissim volutpat. In tincidunt leo imperdiet elit pulvinar, in rhoncus nulla pretium. Duis id malesuada risus. Phasellus libero nunc, feugiat at pharetra sit amet, vulputate ut justo."
+    }
+  ]
+  ````
+- ##### Get a specific article by ID
+  ````
+  GET https://frozen-inlet-63495.herokuapp.com/api/articles/id
+  ````
+  Example request:
+  ````
+  fetch('https://frozen-inlet-63495.herokuapp.com/api/articles/1', {
+      method: 'get',
+      headers: new Headers({
+        'Authorization': `Bearer d6e2e7eb-ee9c-4f48-bf2a-4e491111cdc0`
+      })
+    })
+    .then(response => response.json())
+  ````
+  Example response:
+  ````
+  {
+    "id": 1,
+    "title": "Choosing Your First Credit Card",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vel dui mattis, bibendum dui aliquet, lobortis ante. Cras vestibulum, quam ac tincidunt dapibus, sapien mauris hendrerit mauris, ut scelerisque nisl magna sed ipsum. Sed molestie tortor vitae dignissim volutpat. In tincidunt leo imperdiet elit pulvinar, in rhoncus nulla pretium. Duis id malesuada risus. Phasellus libero nunc, feugiat at pharetra sit amet, vulputate ut justo."
+  }
+  ````
