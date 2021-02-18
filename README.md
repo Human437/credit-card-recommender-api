@@ -37,9 +37,6 @@ TEST_DATABASE_URL=INSERT-YOUR-TEST-DATABASE-URL-HERE
 
 #### Articles
 - ##### Get all articles
-  ````
-  GET https://frozen-inlet-63495.herokuapp.com/api/articles
-  ````
   Example request:
   ````
   fetch('https://frozen-inlet-63495.herokuapp.com/api/articles', {
@@ -71,9 +68,6 @@ TEST_DATABASE_URL=INSERT-YOUR-TEST-DATABASE-URL-HERE
   ]
   ````
 - ##### Get a specific article by ID
-  ````
-  GET https://frozen-inlet-63495.herokuapp.com/api/articles/id
-  ````
   Example request:
   ````
   fetch('https://frozen-inlet-63495.herokuapp.com/api/articles/1', {
@@ -92,3 +86,95 @@ TEST_DATABASE_URL=INSERT-YOUR-TEST-DATABASE-URL-HERE
     "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vel dui mattis, bibendum dui aliquet, lobortis ante. Cras vestibulum, quam ac tincidunt dapibus, sapien mauris hendrerit mauris, ut scelerisque nisl magna sed ipsum. Sed molestie tortor vitae dignissim volutpat. In tincidunt leo imperdiet elit pulvinar, in rhoncus nulla pretium. Duis id malesuada risus. Phasellus libero nunc, feugiat at pharetra sit amet, vulputate ut justo."
   }
   ````
+#### Users
+- ##### Get a user by email
+  Example request:
+  ````
+  fetch(`https://frozen-inlet-63495.herokuapp.com/api/users?email=john-doe@dummy-account.com`, {
+      method: 'get',
+      headers: new Headers({
+        'Authorization': `Bearer d6e2e7eb-ee9c-4f48-bf2a-4e491111cdc0`
+      })
+    })
+    .then(response => response.json())
+  ````
+  Example response:
+  ````
+  {
+    "id": 2,
+    "email": "john-doe@dummy-account.com",
+    "hashedpassword": "$2a$10$YTluj.iNbWgqYHj860rLAOdzbML/EIDVBB7e3eIwwTf3qPgt5NChG",
+    "usercards": [
+        1
+    ],
+    "msg": ""
+  }
+  ````
+- ##### Post a new user
+  Example request:
+  ````
+  fetch('https://frozen-inlet-63495.herokuapp.com/api/users', {
+    "email":"blah@gmail.com",
+    "hashedPassword": "$2a$10$YTluj.iNbWgqYHj860rLAOdzbML/EIDVBB7e3eIwwTf3qPgt5NChG",
+    "userCards":[1],
+    "msg":"test msg"
+    }),
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': `Bearer d6e2e7eb-ee9c-4f48-bf2a-4e491111cdc0`
+    },
+  })
+  .then(response => response.json())
+  ````
+  Example response:
+  ````
+  {
+    "id": 3,
+    "email": "blah@gmail.com",
+    "hashedpassword": "$2a$10$YTluj.iNbWgqYHj860rLAOdzbML/EIDVBB7e3eIwwTf3qPgt5NChG",
+    "usercards": [
+        1
+    ],
+    "msg": "test msg"
+  }
+  ````
+- ##### Get a user by ID
+  Example request:
+  ````
+  fetch(`https://frozen-inlet-63495.herokuapp.com/api/users/3`, {
+    method: 'get',
+    headers: new Headers({
+      'Authorization': `Bearer d6e2e7eb-ee9c-4f48-bf2a-4e491111cdc0`
+    })
+  })
+  .then(response => response.json())
+  ````
+  Example response:
+  ````
+  {
+    "id": 3,
+    "email": "blah@gmail.com",
+    "hashedpassword": "$2a$10$YTluj.iNbWgqYHj860rLAOdzbML/EIDVBB7e3eIwwTf3qPgt5NChG",
+    "usercards": [
+        1
+    ],
+    "msg": "test msg"
+  }
+  ````
+- ##### Patch a user by ID
+  Example request:
+  ````
+  fetch(`https://frozen-inlet-63495.herokuapp.com/api/users/3`, {
+    method: 'PATCH',
+    headers: new Headers({
+      'Authorization': `Bearer d6e2e7eb-ee9c-4f48-bf2a-4e491111cdc0`,
+      'content-type': 'application/json',
+    }),
+    body: JSON.stringify({
+      usercards: [7,8],
+      msg: "Patch test msg"
+    })
+  })
+  ````
+  Example response:  
+  The only response is the status code 204.
